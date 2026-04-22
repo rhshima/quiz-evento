@@ -102,7 +102,7 @@ svg.setAttribute("viewBox", "0 0 600 600");
 document.getElementById("app").appendChild(svg);
 
 var cx = 300, cy = 300, raios = [60,100,140,180,220,260];
-var cores = ["#000000","#FFD400","#FF8C00","#FF0000","#0066FF"];
+var cores = ["#000000","#FF0000","#FF8C00","#FFD400","#0066FF"];
 var estadoAtual = []; for (var i=0;i<12;i++) estadoAtual.push(0);
 
 function polar(cx,cy,r,ang){ var rad=(ang-90)*Math.PI/180; return {x:cx+r*Math.cos(rad), y:cy+r*Math.sin(rad)}; }
@@ -130,7 +130,7 @@ for(var g=0;g<12;g++){
   }
 }
 for(var n=0;n<12;n++){
-  var ang=n*30+15, pos=polar(cx,cy,250,ang);
+  var ang=n*30+15, pos=polar(cx,cy,220,ang);
   var t=document.createElementNS(svgNS,"text");
   t.setAttribute("x",pos.x); t.setAttribute("y",pos.y); t.setAttribute("fill","black"); t.setAttribute("font-size","18"); t.setAttribute("text-anchor","middle");
   t.textContent=n+1; svg.appendChild(t);
