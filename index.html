@@ -102,7 +102,7 @@ svg.setAttribute("viewBox", "0 0 600 600");
 document.getElementById("app").appendChild(svg);
 
 var cx = 300, cy = 300, raios = [60,100,140,180,220,260];
-var cores = ["#000000","#FFD400","#FF8C00","#FF0000","#0066FF"];
+var cores = ["#000000","#FF0000","#FF8C00","#FFD400","#0066FF"];
 var estadoAtual = []; for (var i=0;i<12;i++) estadoAtual.push(0);
 
 function polar(cx,cy,r,ang){ var rad=(ang-90)*Math.PI/180; return {x:cx+r*Math.cos(rad), y:cy+r*Math.sin(rad)}; }
@@ -144,9 +144,9 @@ centerText.textContent="QUIZ"; svg.appendChild(centerText);
 
 var legenda = [
   { cor: "PRETO", corHex: "#000000", texto: "Pessimista, Apagado, Indiferente" },
-  { cor: "AMARELO", corHex: "ffd400", texto: "Pessimista, se mexe sob Ordens!" },
+  { cor: "VERMELHO", corHex: "ff0000", texto: "Pessimista, se mexe sob Ordens!" },
   { cor: "LARANJA", corHex: "#ff8c00", texto: "Colabora, mas desiste Fácil!" },
-  { cor: "VERMELHO", corHex: "#ff0000", texto: "Ótima Energia, Faz acontecer!" },
+  { cor: "AMARELO", corHex: "#ffd400", texto: "Ótima Energia, Faz acontecer!" },
   { cor: "AZUL", corHex: "#0066ff", texto: "Otimista, Assume, Comprometido - Ningúem Segura!" }
 ];
 var respostas = [];
