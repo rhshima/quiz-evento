@@ -156,7 +156,7 @@ function renderLegenda(){
   for(var i=0;i<legenda.length;i++){
     var item=document.createElement("div");
     item.className="legenda-item";
-    item.innerHTML='<div class="bolinha" style="background:'+legenda[i].corHex+';"></div><div><strong>'+legenda[i].cor+':</strong> '+escapeHtml(legenda[i].texto)+'</div>';
+    item.innerHTML='<div class="bolinha" style="color:'+legenda[i].corHex+';font-size:22px;">🔥</div><div><strong>'+legenda[i].cor+':</strong> '+escapeHtml(legenda[i].texto)+'</div>';
     wrap.appendChild(item);
   }
 }
