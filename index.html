@@ -131,7 +131,7 @@ for(var g=0;g<12;g++){
 }
 for(var n=0;n<12;n++){
   var ang = n*30 + 18;
-  var pos = polar(cx, cy, 235, ang);
+  var pos = polar(cx, cy, 265, ang);
 
   var t = document.createElementNS(svgNS, "text");
   t.setAttribute("x", pos.x);
@@ -168,7 +168,7 @@ function renderLegenda(){
   for(var i=0;i<legenda.length;i++){
     var item=document.createElement("div");
     item.className="legenda-item";
-    item.innerHTML='<div class="bolinha" style="color:'+legenda[i].corHex+';font-size:24px;display:flex;align-items:center;justify-content:center;line-height:1;">🔥</div><div><strong>'+legenda[i].cor+':</strong> '+escapeHtml(legenda[i].texto)+'</div>';
+    item.innerHTML='<div class="bolinha" item.innerHTML='<div class="bolinha"><span style="color:'+legenda[i].corHex+';font-size:24px;line-height:1;">🔥</span></div><div><strong>'+legenda[i].cor+':</strong> '+escapeHtml(legenda[i].texto)+'</div>';';font-size:24px;display:flex;align-items:center;justify-content:center;line-height:1;">🔥</div><div><strong>'+legenda[i].cor+':</strong> '+escapeHtml(legenda[i].texto)+'</div>';
     wrap.appendChild(item);
   }
 }
