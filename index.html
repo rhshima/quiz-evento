@@ -130,9 +130,9 @@ for(var g=0;g<12;g++){
   }
 }
 for(var n=0;n<12;n++){
-  var ang=n*30+10, pos=polar(cx,cy,225,ang);
+  var ang=n*30+18, pos=polar(cx,cy,215,ang);
   var t=document.createElementNS(svgNS,"text");
-  t.setAttribute("x",pos.x); t.setAttribute("y",pos.y); t.setAttribute("fill","black"); t.setAttribute("font-size","18"); t.setAttribute("text-anchor","middle");
+  t.setAttribute("x",pos.x); t.setAttribute("y",pos.y); t.setAttribute("fill","black"); t.setAttribute("font-size","18"); t.setAttribute("text-anchor","middle"); t.setAttribute("dominant-baseline","middle");
   t.textContent=n+1; svg.appendChild(t);
 }
 var centerCircle = document.createElementNS(svgNS,"circle");
