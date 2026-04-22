@@ -101,8 +101,8 @@ var svg = document.createElementNS(svgNS, "svg");
 svg.setAttribute("viewBox", "0 0 600 600");
 document.getElementById("app").appendChild(svg);
 
-var cx = 300, cy = 300, raios = [80,130,180,230,280];
-var cores = ["#FFD400","#FF8C00","#FF0000","#0066FF"];
+var cx = 300, cy = 300, raios = [60,100,140,180,220,260];
+var cores = ["#000000","#FFD400","#FF8C00","#FF0000","#0066FF"];
 var estadoAtual = []; for (var i=0;i<12;i++) estadoAtual.push(0);
 
 function polar(cx,cy,r,ang){ var rad=(ang-90)*Math.PI/180; return {x:cx+r*Math.cos(rad), y:cy+r*Math.sin(rad)}; }
@@ -111,14 +111,14 @@ function fatia(r1,r2,a1,a2){
   return "M "+p1.x+" "+p1.y+" A "+r2+" "+r2+" 0 0 1 "+p2.x+" "+p2.y+" L "+p3.x+" "+p3.y+" A "+r1+" "+r1+" 0 0 0 "+p4.x+" "+p4.y+" Z";
 }
 function atualizarGomo(g){
-  for(var l=0;l<4;l++){
+  for(var l=0;l<5;l++){
     var el=document.querySelector('[data-g="'+g+'"][data-l="'+l+'"]');
     if(el){ el.setAttribute("fill", l<estadoAtual[g] ? cores[l] : "white"); }
   }
 }
 for(var g=0;g<12;g++){
   var a1=g*30, a2=(g+1)*30;
-  for(var l=0;l<4;l++){
+  for(var l=0;l<5;l++){
     var path=document.createElementNS(svgNS,"path");
     path.setAttribute("d", fatia(raios[l],raios[l+1],a1,a2));
     path.setAttribute("fill","white");
@@ -136,7 +136,7 @@ for(var n=0;n<12;n++){
   t.textContent=n+1; svg.appendChild(t);
 }
 var centerCircle = document.createElementNS(svgNS,"circle");
-centerCircle.setAttribute("cx",cx); centerCircle.setAttribute("cy",cy); centerCircle.setAttribute("r",60); centerCircle.setAttribute("fill","#111");
+centerCircle.setAttribute("cx",cx); centerCircle.setAttribute("cy",cy); centerCircle.setAttribute("r",60); centerCircle.setAttribute("fill","#808080");
 svg.appendChild(centerCircle);
 var centerText = document.createElementNS(svgNS,"text");
 centerText.setAttribute("x",cx); centerText.setAttribute("y",cy+5); centerText.setAttribute("fill","white"); centerText.setAttribute("font-size","18"); centerText.setAttribute("text-anchor","middle"); centerText.setAttribute("id","centerText");
@@ -144,9 +144,9 @@ centerText.textContent="QUIZ"; svg.appendChild(centerText);
 
 var legenda = [
   { cor: "PRETO", corHex: "#000000", texto: "Pessimista, Apagado, Indiferente" },
-  { cor: "VERMELHO", corHex: "#e53935", texto: "Pessimista, se mexe sob Ordens!" },
+  { cor: "AMARELO", corHex: "#e53935", texto: "Pessimista, se mexe sob Ordens!" },
   { cor: "LARANJA", corHex: "#ff8c00", texto: "Colabora, mas desiste Fácil!" },
-  { cor: "AMARELO", corHex: "#ffd400", texto: "Ótima Energia, Faz acontecer!" },
+  { cor: "VERMELHO", corHex: "#ffd400", texto: "Ótima Energia, Faz acontecer!" },
   { cor: "AZUL", corHex: "#0066ff", texto: "Otimista, Assume, Comprometido - Ningúem Segura!" }
 ];
 var respostas = [];
