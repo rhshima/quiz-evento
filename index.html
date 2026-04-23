@@ -17,7 +17,16 @@
     .btn-escuro{background:#333;color:white}
     .btn-verde{background:#22c55e;color:black}
     .btn-vermelho{background:#b91c1c;color:white}
-    svg{width:90vw;max-width:520px;display:block;margin:0 auto}
+    svg{
+      width:100%;
+      max-width:520px;
+      height:auto;
+      min-height:520px;
+      display:block;
+      margin:10px auto 20px auto;
+      background:#ffffff;
+      border-radius:50%;
+    }
     .legenda-item{
       display:grid;
       grid-template-columns:30px 1fr;
@@ -69,6 +78,7 @@
       <button class="btn-verde" id="btnFinalizar" type="button">Finalizar e salvar</button>
 
       <p class="pequeno">Nesta versão, as respostas são enviadas para a base online.</p>
+      <p class="pequeno" id="statusOnline"></p>
     </div>
 
     <div class="box" id="adminArea">
@@ -111,11 +121,13 @@
     var SUPABASE_URL = "https://ukbmrszdjqkgxmtlixlp.supabase.co";
     var SUPABASE_ANON_KEY = "sb_publishable_8-Ou14CQn7kPQlFEo00f8A_ZEVgfDpu";
     var senhaPadraoCriador = "1234";
-    var supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    var supabase = null;
 
     var svgNS = "http://www.w3.org/2000/svg";
     var svg = document.createElementNS(svgNS, "svg");
     svg.setAttribute("viewBox", "0 0 600 600");
+    svg.setAttribute("width", "600");
+    svg.setAttribute("height", "600");
     document.getElementById("app").appendChild(svg);
 
     var cx = 300, cy = 300, raios = [60,100,140,180,220,260];
@@ -149,60 +161,66 @@
       }
     }
 
-    for(var g=0; g<12; g++){
-      var a1=g*30, a2=(g+1)*30;
+    function desenharRoda(){
+      for(var g=0; g<12; g++){
+        var a1=g*30, a2=(g+1)*30;
 
-      for(var l=0; l<5; l++){
-        var path=document.createElementNS(svgNS,"path");
-        path.setAttribute("d", fatia(raios[l],raios[l+1],a1,a2));
-        path.setAttribute("fill","white");
-        path.setAttribute("stroke","#333");
-        path.setAttribute("data-g",g);
-        path.setAttribute("data-l",l);
-        path.onclick=(function(g,l){
-          return function(){
-            estadoAtual[g]=(estadoAtual[g]==l+1)?l:l+1;
-            atualizarGomo(g);
-            atualizarResumo();
-          };
-        })(g,l);
-        svg.appendChild(path);
+        for(var l=0; l<5; l++){
+          var path=document.createElementNS(svgNS,"path");
+          path.setAttribute("d", fatia(raios[l],raios[l+1],a1,a2));
+          path.setAttribute("fill","white");
+          path.setAttribute("stroke","#333");
+          path.setAttribute("stroke-width","2");
+          path.setAttribute("data-g",g);
+          path.setAttribute("data-l",l);
+          path.style.cursor = "pointer";
+
+          path.onclick=(function(g,l){
+            return function(){
+              estadoAtual[g]=(estadoAtual[g]==l+1)?l:l+1;
+              atualizarGomo(g);
+              atualizarResumo();
+            };
+          })(g,l);
+
+          svg.appendChild(path);
+        }
       }
+
+      for(var n=0; n<12; n++){
+        var ang = n*30 + 15;
+        var pos = polar(cx, cy, 240, ang);
+
+        var t = document.createElementNS(svgNS, "text");
+        t.setAttribute("x", pos.x);
+        t.setAttribute("y", pos.y);
+        t.setAttribute("fill", "black");
+        t.setAttribute("font-size", "18");
+        t.setAttribute("font-weight", "bold");
+        t.setAttribute("text-anchor", "middle");
+        t.setAttribute("dominant-baseline", "middle");
+        t.textContent = n + 1;
+
+        svg.appendChild(t);
+      }
+
+      var centerCircle = document.createElementNS(svgNS,"circle");
+      centerCircle.setAttribute("cx",cx);
+      centerCircle.setAttribute("cy",cy);
+      centerCircle.setAttribute("r",60);
+      centerCircle.setAttribute("fill","#808080");
+      svg.appendChild(centerCircle);
+
+      var centerText = document.createElementNS(svgNS,"text");
+      centerText.setAttribute("x",cx);
+      centerText.setAttribute("y",cy+5);
+      centerText.setAttribute("fill","white");
+      centerText.setAttribute("font-size","18");
+      centerText.setAttribute("text-anchor","middle");
+      centerText.setAttribute("id","centerText");
+      centerText.textContent="QUIZ";
+      svg.appendChild(centerText);
     }
-
-    for(var n=0; n<12; n++){
-      var ang = n*30 + 15;
-      var pos = polar(cx, cy, 240, ang);
-
-      var t = document.createElementNS(svgNS, "text");
-      t.setAttribute("x", pos.x);
-      t.setAttribute("y", pos.y);
-      t.setAttribute("fill", "black");
-      t.setAttribute("font-size", "18");
-      t.setAttribute("font-weight", "bold");
-      t.setAttribute("text-anchor", "middle");
-      t.setAttribute("dominant-baseline", "middle");
-      t.textContent = n + 1;
-
-      svg.appendChild(t);
-    }
-
-    var centerCircle = document.createElementNS(svgNS,"circle");
-    centerCircle.setAttribute("cx",cx);
-    centerCircle.setAttribute("cy",cy);
-    centerCircle.setAttribute("r",60);
-    centerCircle.setAttribute("fill","#808080");
-    svg.appendChild(centerCircle);
-
-    var centerText = document.createElementNS(svgNS,"text");
-    centerText.setAttribute("x",cx);
-    centerText.setAttribute("y",cy+5);
-    centerText.setAttribute("fill","white");
-    centerText.setAttribute("font-size","18");
-    centerText.setAttribute("text-anchor","middle");
-    centerText.setAttribute("id","centerText");
-    centerText.textContent="QUIZ";
-    svg.appendChild(centerText);
 
     var legenda = [
       { cor: "PRETO", corHex: "#000000", texto: "Pessimista, Apagado, Indiferente" },
@@ -276,6 +294,19 @@
       atualizarResumo();
     }
 
+    function iniciarSupabase(){
+      try{
+        if(window.supabase && typeof window.supabase.createClient === "function"){
+          supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+          document.getElementById("statusOnline").textContent = "Modo online ativo.";
+        }else{
+          document.getElementById("statusOnline").textContent = "Modo online indisponível no momento. A roda continua funcionando.";
+        }
+      }catch(e){
+        document.getElementById("statusOnline").textContent = "Falha ao iniciar modo online. A roda continua funcionando.";
+      }
+    }
+
     async function finalizarSalvar(){
       var nome=document.getElementById("nome").value.trim();
       var whatsapp=document.getElementById("whatsapp").value.trim();
@@ -283,8 +314,8 @@
       if(!nome){ alert("Digite o nome."); return; }
       if(!whatsapp){ alert("Digite o WhatsApp com DDD."); return; }
 
-      if (SUPABASE_URL.indexOf("COLE_AQUI")===0 || SUPABASE_ANON_KEY.indexOf("COLE_AQUI")===0){
-        alert("Cole sua URL e sua chave pública do Supabase no código.");
+      if(!supabase){
+        alert("A roda está funcionando, mas o modo online não carregou.");
         return;
       }
 
@@ -311,6 +342,12 @@
     }
 
     async function carregarRespostasOnline(){
+      if(!supabase){
+        document.getElementById("listaRespostas").innerHTML =
+          "<p class='pequeno'>Modo online indisponível no momento.</p>";
+        return;
+      }
+
       var resultado = await supabase
         .from("respostas_quiz")
         .select("*")
@@ -420,8 +457,10 @@
     document.getElementById("btnCarregarOnline").onclick = carregarRespostasOnline;
     document.getElementById("btnExportar").onclick = exportarCSV;
 
+    desenharRoda();
     renderLegenda();
     atualizarResumo();
+    iniciarSupabase();
   </script>
 </body>
 </html>
