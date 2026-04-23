@@ -205,23 +205,15 @@
         svg.appendChild(t);
       }
 
-      var centerCircle = document.createElementNS(svgNS,"circle");
-      centerCircle.setAttribute("cx",cx);
-      centerCircle.setAttribute("cy",cy);
-      centerCircle.setAttribute("r",60);
-      centerCircle.setAttribute("fill","#808080");
-      svg.appendChild(centerCircle);
+     var logo = document.createElementNS(svgNS,"image");
 
-      var centerText = document.createElementNS(svgNS,"text");
-      centerText.setAttribute("x",cx);
-      centerText.setAttribute("y",cy+5);
-      centerText.setAttribute("fill","white");
-      centerText.setAttribute("font-size","18");
-      centerText.setAttribute("text-anchor","middle");
-      centerText.setAttribute("id","centerText");
-      centerText.textContent="QUIZ";
-      svg.appendChild(centerText);
-    }
+logo.setAttribute("href","Fogo Azul.png"); 
+logo.setAttribute("x", cx - 60);
+logo.setAttribute("y", cy - 60);
+logo.setAttribute("width", 120);
+logo.setAttribute("height", 120);
+
+svg.appendChild(logo);
 
     var legenda = [
       { cor: "PRETO", corHex: "#000000", texto: "Pessimista, Apagado, Indiferente" },
