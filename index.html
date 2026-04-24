@@ -138,7 +138,7 @@
     </div>
   </div>
 
-  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script>
     var SUPABASE_URL = "https://ukbmrszdjqkgxmtlixlp.supabase.co";
     var SUPABASE_ANON_KEY = "sb_publishable_8-Ou14CQn7kPQlFEo00f8A_ZEVgfDpu";
@@ -342,9 +342,9 @@ function iconeFogo(cor){
       atualizarResumo();
     }
 
-    function iniciarSupabase(){
+ function iniciarSupabase(){
   try{
-    if(window.supabase){
+    if(window.supabase && window.supabase.createClient){
       supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
       document.getElementById("statusOnline").textContent = "Modo online ativo.";
     }else{
