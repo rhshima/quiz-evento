@@ -138,7 +138,7 @@
     </div>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="https://unpkg.com/@supabase/supabase-js@2.39.7/dist/umd/supabase.min.js"></script>
   <script>
     var SUPABASE_URL = "https://ukbmrszdjqkgxmtlixlp.supabase.co";
     var SUPABASE_ANON_KEY = "sb_publishable_8-Ou14CQn7kPQlFEo00f8A_ZEVgfDpu";
@@ -344,14 +344,18 @@ function iconeFogo(cor){
 
  function iniciarSupabase(){
   try{
-    if(window.supabase && window.supabase.createClient){
-      supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-      document.getElementById("statusOnline").textContent = "Modo online ativo.";
-    }else{
-      document.getElementById("statusOnline").textContent = "Modo online indisponível no momento. A roda continua funcionando.";
+    if(typeof supabase === "undefined" || !window.supabase){
+      document.getElementById("statusOnline").textContent = "Supabase não carregou.";
+      return;
     }
+
+    var cliente = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    supabase = cliente;
+
+    document.getElementById("statusOnline").textContent = "Modo online ativo.";
   }catch(e){
-    document.getElementById("statusOnline").textContent = "Falha ao iniciar modo online. A roda continua funcionando.";
+    document.getElementById("statusOnline").textContent = "Erro ao iniciar Supabase.";
+    console.error(e);
   }
 }
 
