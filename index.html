@@ -17,8 +17,8 @@
     .btn-escuro{background:#333;color:white}
     .btn-verde{background:#22c55e;color:black}
     .btn-vermelho{background:#b91c1c;color:white}
-    svg{
-     width:100%;
+   svg{
+  width:100%;
   max-width:520px;
   height:auto;
   min-height:520px;
@@ -26,6 +26,7 @@
   margin:10px auto 20px auto;
   background:#ffffff;
   border-radius:50%;
+  overflow: visible;
 }
     .legenda-item{
       display:grid;
@@ -173,8 +174,8 @@
   fogoExterno.setAttribute("height", 640);
   fogoExterno.setAttribute("opacity", 0.95);
 
-  svg.appendChild(fogoExterno);
-
+svg.insertBefore(fogoExterno, svg.firstChild);
+     
   for(var g=0; g<12; g++){
   var a1 = g * 30, a2 = (g + 1) * 30;
 
