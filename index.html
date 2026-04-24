@@ -164,12 +164,12 @@
 
     function desenharRoda()var fogoExterno = document.createElementNS(svgNS,"image");
 
-fogoExterno.setAttribute("href","fogo-azul.png"); 
-fogoExterno.setAttribute("x", cx - 300);
-fogoExterno.setAttribute("y", cy - 300);
-fogoExterno.setAttribute("width", 600);
-fogoExterno.setAttribute("height", 600);
-fogoExterno.setAttribute("opacity", 0.9);
+  fogoExterno.setAttribute("href","fogo-azul.png");
+  fogoExterno.setAttribute("x", cx - 320);
+  fogoExterno.setAttribute("y", cy - 320);
+  fogoExterno.setAttribute("width", 640);
+  fogoExterno.setAttribute("height", 640);
+  fogoExterno.setAttribute("opacity", 0.95);
 
 svg.appendChild(fogoExterno);{
       for(var g=0; g<12; g++){
