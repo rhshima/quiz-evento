@@ -297,17 +297,9 @@ function iconeFogo(cor){
     }
 
     function atualizarResumo(){
-      var total=0, respondidos=0;
-      for(var i=0;i<estadoAtual.length;i++){
-        total += estadoAtual[i];
-        if(estadoAtual[i] > 0) respondidos++;
-      }
+  var total = 0, respondidos = 0;
 
-      document.getElementById("resultadoResumo").innerHTML =
-       function atualizarResumo(){
-  var total=0, respondidos=0;
-
-  for(var i=0;i<estadoAtual.length;i++){
+  for(var i = 0; i < estadoAtual.length; i++){
     total += estadoAtual[i];
     if(estadoAtual[i] > 0) respondidos++;
   }
@@ -318,7 +310,7 @@ function iconeFogo(cor){
     var cor = cores[valor - 1];
     var html = "";
 
-    for(var f=0; f<valor; f++){
+    for(var f = 0; f < valor; f++){
       html += iconeFogo(cor);
     }
 
@@ -329,8 +321,8 @@ function iconeFogo(cor){
     "<strong>Resultado Fogo Azul:</strong><br>" +
     "Etapas Respondidas: " + respondidos + " de 12<br>" +
     "Soma total: " + total + "<br><br>" +
-    estadoAtual.map(function(v,idx){
-      return '<span class="mini">'+(idx+1)+': '+fogosResultado(v)+'</span>';
+    estadoAtual.map(function(v, idx){
+      return '<span class="mini">' + (idx + 1) + ': ' + fogosResultado(v) + '</span>';
     }).join(" ");
 }
     function limparResposta(){
