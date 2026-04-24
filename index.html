@@ -162,7 +162,9 @@
       }
     }
 
-    function desenharRoda()var fogoExterno = document.createElementNS(svgNS,"image");
+   function desenharRoda(){
+
+  var fogoExterno = document.createElementNS(svgNS,"image");
 
   fogoExterno.setAttribute("href","fogo-azul.png");
   fogoExterno.setAttribute("x", cx - 320);
@@ -171,9 +173,9 @@
   fogoExterno.setAttribute("height", 640);
   fogoExterno.setAttribute("opacity", 0.95);
 
-svg.appendChild(fogoExterno);{
-      for(var g=0; g<12; g++){
-        var a1=g*30, a2=(g+1)*30;
+  svg.appendChild(fogoExterno);
+
+  for(var g=0; g<12; g++){
 
         for(var l=0; l<5; l++){
           var path=document.createElementNS(svgNS,"path");
