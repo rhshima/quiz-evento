@@ -205,9 +205,9 @@
         svg.appendChild(t);
       }
 
-     var logo = document.createElementNS(svgNS,"image");
+   var logo = document.createElementNS(svgNS,"image");
 
-logo.setAttribute("href","Fogo Azul.png"); 
+logo.setAttributeNS("http://www.w3.org/1999/xlink","href","Fogo Azul.png");
 logo.setAttribute("x", cx - 60);
 logo.setAttribute("y", cy - 60);
 logo.setAttribute("width", 120);
