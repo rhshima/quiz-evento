@@ -127,7 +127,7 @@
 
     var svgNS = "http://www.w3.org/2000/svg";
     var svg = document.createElementNS(svgNS, "svg");
-    svg.setAttribute("viewBox", "0 0 600 600");
+    svg.setAttribute("viewBox", "-80 -80 760 760");
     svg.setAttribute("width", "600");
     svg.setAttribute("height", "600");
     document.getElementById("app").appendChild(svg);
@@ -168,10 +168,10 @@
   var fogoExterno = document.createElementNS(svgNS,"image");
 
   fogoExterno.setAttribute("href","fogo-azul.png");
-  fogoExterno.setAttribute("x", cx - 320);
-  fogoExterno.setAttribute("y", cy - 320);
-  fogoExterno.setAttribute("width", 640);
-  fogoExterno.setAttribute("height", 640);
+  fogoExterno.setAttribute("x", -80);
+  fogoExterno.setAttribute("y", -80);
+  fogoExterno.setAttribute("width", 760);
+  fogoExterno.setAttribute("height", 760);
   fogoExterno.setAttribute("opacity", 0.95);
 
 svg.insertBefore(fogoExterno, svg.firstChild);
