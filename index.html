@@ -55,6 +55,17 @@
     table{width:100%;border-collapse:collapse;margin-top:10px;font-size:13px}
     th,td{border-bottom:1px solid #333;padding:8px 6px;text-align:left;vertical-align:top}
     .mini{display:inline-block;padding:4px 8px;border-radius:999px;background:#313131;color:white;font-size:12px;margin:2px 4px 2px 0}
+    .mini svg{
+  width:16px;
+  height:16px;
+  min-height:0;
+  max-width:16px;
+  display:inline-block;
+  margin:0 1px;
+  background:transparent;
+  border-radius:0;
+  vertical-align:middle;
+}
     @media (max-width:900px){.container{grid-template-columns:1fr}}
   </style>
 </head>
@@ -293,14 +304,35 @@ function iconeFogo(cor){
       }
 
       document.getElementById("resultadoResumo").innerHTML =
-        "<strong>Resumo atual:</strong><br>" +
-        "Gomos respondidos: " + respondidos + " de 12<br>" +
-        "Soma total: " + total + "<br><br>" +
-        estadoAtual.map(function(v,idx){
-          return '<span class="mini">'+(idx+1)+': '+v+'</span>';
-        }).join("");
+       function atualizarResumo(){
+  var total=0, respondidos=0;
+
+  for(var i=0;i<estadoAtual.length;i++){
+    total += estadoAtual[i];
+    if(estadoAtual[i] > 0) respondidos++;
+  }
+
+  function fogosResultado(valor){
+    if(valor <= 0) return "";
+
+    var cor = cores[valor - 1];
+    var html = "";
+
+    for(var f=0; f<valor; f++){
+      html += iconeFogo(cor);
     }
 
+    return html;
+  }
+
+  document.getElementById("resultadoResumo").innerHTML =
+    "<strong>Resultado Fogo Azul:</strong><br>" +
+    "Etapas Respondidas: " + respondidos + " de 12<br>" +
+    "Soma total: " + total + "<br><br>" +
+    estadoAtual.map(function(v,idx){
+      return '<span class="mini">'+(idx+1)+': '+fogosResultado(v)+'</span>';
+    }).join(" ");
+}
     function limparResposta(){
       for(var i=0;i<12;i++){
         estadoAtual[i]=0;
