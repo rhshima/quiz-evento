@@ -1,1 +1,514 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Roda Fogo Azul Online</title>
+  <style>
+    body{margin:0;background:#111;color:white;font-family:Arial,sans-serif;padding:20px}
+    .container{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1.1fr 0.9fr;gap:20px}
+    .box{background:#1b1b1b;border-radius:18px;padding:20px;box-sizing:border-box}
+    h1,h2,h3{margin-top:0}
+    p{color:#ddd;line-height:1.5}
+    label{display:block;margin-bottom:6px;font-weight:bold}
+    input{width:100%;padding:12px;border-radius:10px;border:none;box-sizing:border-box;margin-bottom:12px;font-size:15px}
+    button{padding:12px 18px;border:none;border-radius:999px;font-size:14px;font-weight:bold;cursor:pointer;margin:6px 6px 0 0}
+    .btn-claro{background:white;color:black}
+    .btn-escuro{background:#333;color:white}
+    .btn-verde{background:#22c55e;color:black}
+    .btn-vermelho{background:#b91c1c;color:white}
+   svg{
+  width:100%;
+  max-width:520px;
+  height:auto;
+  min-height:520px;
+  display:block;
+  margin:10px auto 20px auto;
+  background:#ffffff;
+  border-radius:50%;
+  overflow: visible;
+}
+    .legenda-item{
+      display:grid;
+      grid-template-columns:30px 1fr;
+      gap:10px;
+      align-items:center;
+      background:#f3f3f3;
+      padding:10px 12px;
+      border-radius:12px;
+      margin-bottom:10px;
+      color:#111;
+    }
+   .bolinha svg{
+  width:20px;
+  height:20px;
+  min-height:0;
+  max-width:24px;
+  display:block;
+  margin:0;
+  background:transparent;
+  border-radius:0;
+}
+    .resumo{background:#f3f3f3;padding:14px;border-radius:14px;margin-top:12px;color:#111;}
+    .pequeno{font-size:12px;color:#555;}
+    .oculto{display:none;}
+    table{width:100%;border-collapse:collapse;margin-top:10px;font-size:13px}
+    th,td{border-bottom:1px solid #333;padding:8px 6px;text-align:left;vertical-align:top}
+    .mini{
+  display:inline-block;
+  padding:6px 10px;
+  border-radius:999px;
+  background:#f3f3f3;
+  color:#111;
+  font-size:13px;
+  margin:4px 0;
+  border:1px solid #ddd;
+}
+    .mini svg{
+  width:22px;
+  height:22px;
+  min-height:0;
+  max-width:16px;
+  display:inline-block;
+  margin:0 1px;
+  background:transparent;
+  border-radius:0;
+  vertical-align:middle;
+}
+    @media (max-width:900px){.container{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="box">
+      <h1>Quiz Circular</h1>
+      <p>Preencha seu nome e WhatsApp, responda tocando nos gomos e finalize ao terminar.</p>
 
+      <label for="nome">Nome</label>
+      <input id="nome" type="text" placeholder="Digite seu nome">
+
+      <label for="whatsapp">WhatsApp com DDD</label>
+      <input id="whatsapp" type="text" placeholder="Ex.: 11999998888">
+
+      <div id="app"></div>
+
+      <div class="resumo" id="resultadoResumo">
+        Nenhuma resposta finalizada ainda.
+      </div>
+
+      <button class="btn-escuro" id="btnLimpar" type="button">Limpar resposta</button>
+      <button class="btn-verde" id="btnFinalizar" type="button">Finalizar e salvar</button>
+
+      <p class="pequeno">Nesta versão, as respostas são enviadas para a base online.</p>
+      <p class="pequeno" id="statusOnline"></p>
+    </div>
+
+    <div class="box" id="adminArea">
+      <h2>Legenda</h2>
+      <p>Os textos abaixo aparecem para todos. No modo criador, você pode editar.</p>
+
+      <div id="legendList"></div>
+
+      <button class="btn-claro" id="btnCriador" type="button">Abrir modo criador</button>
+      <button class="btn-escuro oculto" id="btnFecharCriador" type="button">Fechar modo criador</button>
+
+      <div id="painelCriador" class="oculto">
+        <div style="margin-top:14px;">
+          <label for="senhaCriador">Senha do criador</label>
+          <input id="senhaCriador" type="password" placeholder="Digite a senha">
+        </div>
+
+        <button class="btn-claro" id="btnEntrarCriador" type="button">Entrar</button>
+
+        <div id="painelEdicao" class="oculto">
+          <h3 style="margin-top:18px;">Editar legenda</h3>
+          <div id="legendEditor"></div>
+
+          <label for="tituloCentro">Texto do centro</label>
+          <input id="tituloCentro" type="text" placeholder="Ex.: QUIZ">
+
+          <button class="btn-verde" id="btnSalvarLegenda" type="button">Salvar legenda</button>
+          <button class="btn-escuro" id="btnCarregarOnline" type="button">Atualizar respostas online</button>
+          <button class="btn-vermelho" id="btnExportar" type="button">Exportar CSV</button>
+
+          <h3 style="margin-top:18px;">Respostas online</h3>
+          <div id="listaRespostas"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/@supabase/supabase-js@2.39.7/dist/umd/supabase.min.js"></script>
+  <script>
+    var SUPABASE_URL = "https://ukbmrszdjqkgxmtlixlp.supabase.co";
+    var SUPABASE_ANON_KEY = "sb_publishable_8-Ou14CQn7kPQlFEo00f8A_ZEVgfDpu";
+    var senhaPadraoCriador = "1234";
+    var supabaseClient = null;
+
+    var svgNS = "http://www.w3.org/2000/svg";
+    var svg = document.createElementNS(svgNS, "svg");
+    svg.setAttribute("viewBox", "-80 -80 760 760");
+    svg.setAttribute("width", "600");
+    svg.setAttribute("height", "600");
+    document.getElementById("app").appendChild(svg);
+
+    var cx = 300, cy = 300, raios = [60,100,140,180,220,260];
+    var cores = ["#000000","#FF0000","#FF8C00","#FFD400","#0066FF"];
+    var estadoAtual = [];
+    for (var i = 0; i < 12; i++) estadoAtual.push(0);
+
+    function polar(cx,cy,r,ang){
+      var rad=(ang-90)*Math.PI/180;
+      return {x:cx+r*Math.cos(rad), y:cy+r*Math.sin(rad)};
+    }
+
+    function fatia(r1,r2,a1,a2){
+      var p1=polar(cx,cy,r2,a1),
+          p2=polar(cx,cy,r2,a2),
+          p3=polar(cx,cy,r1,a2),
+          p4=polar(cx,cy,r1,a1);
+      return "M "+p1.x+" "+p1.y+
+             " A "+r2+" "+r2+" 0 0 1 "+p2.x+" "+p2.y+
+             " L "+p3.x+" "+p3.y+
+             " A "+r1+" "+r1+" 0 0 0 "+p4.x+" "+p4.y+
+             " Z";
+    }
+
+    function atualizarGomo(g){
+      for(var l=0;l<5;l++){
+        var el=document.querySelector('[data-g="'+g+'"][data-l="'+l+'"]');
+        if(el){
+          el.setAttribute("fill", l < estadoAtual[g] ? cores[l] : "white");
+        }
+      }
+    }
+
+   function desenharRoda(){
+
+  var fogoExterno = document.createElementNS(svgNS,"image");
+
+  fogoExterno.setAttribute("href","fogo-azul.png");
+  fogoExterno.setAttribute("x", -80);
+  fogoExterno.setAttribute("y", -80);
+  fogoExterno.setAttribute("width", 760);
+  fogoExterno.setAttribute("height", 760);
+  fogoExterno.setAttribute("opacity", 0.95);
+
+svg.insertBefore(fogoExterno, svg.firstChild);
+     
+  for(var g=0; g<12; g++){
+  var a1 = g * 30, a2 = (g + 1) * 30;
+
+  for(var l=0; l<5; l++){
+          var path=document.createElementNS(svgNS,"path");
+          path.setAttribute("d", fatia(raios[l],raios[l+1],a1,a2));
+          path.setAttribute("fill","white");
+          path.setAttribute("stroke","#333");
+          path.setAttribute("stroke-width","2");
+          path.setAttribute("data-g",g);
+          path.setAttribute("data-l",l);
+          path.style.cursor = "pointer";
+
+          path.onclick=(function(g,l){
+            return function(){
+              estadoAtual[g]=(estadoAtual[g]==l+1)?l:l+1;
+              atualizarGomo(g);
+              atualizarResumo();
+            };
+          })(g,l);
+
+          svg.appendChild(path);
+        }
+      }
+
+      for(var n=0; n<12; n++){
+        var ang = n*30 + 15;
+        var pos = polar(cx, cy, 240, ang);
+
+        var t = document.createElementNS(svgNS, "text");
+        t.setAttribute("x", pos.x);
+        t.setAttribute("y", pos.y);
+        t.setAttribute("fill", "black");
+        t.setAttribute("font-size", "18");
+        t.setAttribute("font-weight", "bold");
+        t.setAttribute("text-anchor", "middle");
+        t.setAttribute("dominant-baseline", "middle");
+        t.textContent = n + 1;
+
+        svg.appendChild(t);
+      }
+
+var logo = document.createElementNS(svgNS,"image");
+
+logo.setAttribute("href","Fogo Azul.png");
+logo.setAttributeNS("http://www.w3.org/1999/xlink","href","Fogo Azul.png");
+logo.setAttribute("x", cx - 65);
+logo.setAttribute("y", cy - 65);
+logo.setAttribute("width", 130);
+logo.setAttribute("height", 130);
+
+svg.appendChild(logo);
+}
+
+    var legenda = [
+      { cor: "PRETO", corHex: "#000000", texto: "Estou decepcionado, totalmente apagados!" },
+      { cor: "VERMELHO", corHex: "#FF0000", texto: "Estou muito preocupado sobre isso!" },
+      { cor: "LARANJA", corHex: "#FF8C00", texto: "Vejo altos e baixos nesse item!!" },
+      { cor: "AMARELO", corHex: "#FFD400", texto: "Estou animado e super otimista!!" },
+      { cor: "AZUL", corHex: "#0066FF", texto: "TOP, 100%! Vamos propagar o FOGO AZUL!" }
+    ];
+
+    var respostas = [];
+
+    function escapeHtml(s){
+      return String(s)
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#39;");
+    }
+function iconeFogo(cor){
+  return '' +
+    '<svg width="24" height="24" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
+      '<path fill="' + cor + '" d="M36.2 3.8c1.6 7-1.5 11.9-5.3 16.8-3.5 4.5-7.8 8.9-10.2 14.6-3.4 7.8-2.4 16.6 2.7 22.9 2.8 3.5 6.6 5.7 11 6.7-3.1-2.8-5-6.5-5-11.8 0-7.7 4.4-13.3 9-18.8 3.4-4.1 6.9-8.3 8.4-13.7 2.4 3.3 3.4 7.1 3.1 11.4-.2 3.7-1.6 7.1-2.6 10.7-1.6 5.7-1.2 11.1 2.5 15.8 1.7 2.2 4 4 6.6 5.2 4.6-3.9 7.5-9.8 7.5-16.8 0-9.5-4.6-16.7-10.5-23.4-5.2-5.9-10.7-11.6-17.2-19.6z"/>' +
+    '</svg>';
+}
+  function renderLegenda(){
+  var wrap = document.getElementById("legendList");
+  wrap.innerHTML = "";
+
+  for(var i = 0; i < legenda.length; i++){
+    var item = document.createElement("div");
+    item.className = "legenda-item";
+
+    item.innerHTML =
+      '<div class="bolinha">' +
+        iconeFogo(legenda[i].corHex) +
+      '</div>' +
+      '<div><strong>' + legenda[i].cor + ':</strong> ' + escapeHtml(legenda[i].texto) + '</div>';
+
+    wrap.appendChild(item);
+  }
+}
+
+    function renderEditorLegenda(){
+      var wrap=document.getElementById("legendEditor");
+      wrap.innerHTML="";
+
+      for(var i=0;i<legenda.length;i++){
+        var bloco=document.createElement("div");
+        bloco.innerHTML =
+          '<label>'+legenda[i].cor+'</label>' +
+          '<input type="text" data-legenda="'+i+'" value="'+escapeHtml(legenda[i].texto)+'">';
+        wrap.appendChild(bloco);
+      }
+    }
+
+    function atualizarResumo(){
+  var total = 0, respondidos = 0;
+
+  for(var i = 0; i < estadoAtual.length; i++){
+    total += estadoAtual[i];
+    if(estadoAtual[i] > 0) respondidos++;
+  }
+
+  function fogosResultado(valor){
+    if(valor <= 0) return "";
+
+    var cor = cores[valor - 1];
+    var html = "";
+
+    for(var f = 0; f < valor; f++){
+      html += iconeFogo(cor);
+    }
+
+    return html;
+  }
+
+  document.getElementById("resultadoResumo").innerHTML =
+    "<strong>Resultado Fogo Azul:</strong><br>" +
+    "Etapas Respondidas: " + respondidos + " de 12<br>" +
+    "Soma total: " + total + "<br><br>" +
+    estadoAtual.map(function(v, idx){
+     return '<div class="mini"><strong>Etapa ' + (idx + 1) + ':</strong> ' + fogosResultado(v) + '</div>';
+    }).join("<br>");
+}
+    function limparResposta(){
+      for(var i=0;i<12;i++){
+        estadoAtual[i]=0;
+        atualizarGomo(i);
+      }
+      atualizarResumo();
+    }
+
+ function iniciarSupabase(){
+  try{
+    if(window.supabase && window.supabase.createClient){
+      supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      document.getElementById("statusOnline").textContent = "Modo online ativo.";
+    }else{
+      document.getElementById("statusOnline").textContent = "Supabase não carregou.";
+    }
+  }catch(e){
+    document.getElementById("statusOnline").textContent = "Erro ao iniciar Supabase.";
+    console.error(e);
+  }
+}
+    async function finalizarSalvar(){
+      var nome=document.getElementById("nome").value.trim();
+      var whatsapp=document.getElementById("whatsapp").value.trim();
+
+      if(!nome){ alert("Digite o nome."); return; }
+      if(!whatsapp){ alert("Digite o WhatsApp com DDD."); return; }
+
+      if(!supabaseClient){
+        alert("A roda está funcionando, mas o modo online não carregou.");
+        return;
+      }
+
+      var registro = {
+        nome: nome,
+        whatsapp: whatsapp,
+        data_evento: new Date().toISOString(),
+        respostas: estadoAtual.slice(),
+        total: estadoAtual.reduce(function(a,b){ return a+b; }, 0),
+        legenda: legenda
+      };
+
+      var resp = await supabaseClient.from("respostas_quiz").insert([registro]);
+
+      if(resp.error){
+        alert("Erro ao salvar online: " + resp.error.message);
+        return;
+      }
+
+      alert("Resposta enviada com sucesso.");
+      limparResposta();
+      document.getElementById("nome").value = "";
+      document.getElementById("whatsapp").value = "";
+    }
+
+    async function carregarRespostasOnline(){
+     if(!supabaseClient){
+        document.getElementById("listaRespostas").innerHTML =
+          "<p class='pequeno'>Modo online indisponível no momento.</p>";
+        return;
+      }
+
+      var resultado = await supabase
+        .from("respostas_quiz")
+        .select("*")
+        .order("id", { ascending:false });
+
+      if(resultado.error){
+        document.getElementById("listaRespostas").innerHTML =
+          "<p class='pequeno'>Erro ao carregar respostas: " + escapeHtml(resultado.error.message) + "</p>";
+        return;
+      }
+
+      respostas = resultado.data || [];
+      renderListaRespostas();
+    }
+
+    function renderListaRespostas(){
+      var wrap=document.getElementById("listaRespostas");
+
+      if(!respostas.length){
+        wrap.innerHTML="<p class='pequeno'>Ainda não há respostas online.</p>";
+        return;
+      }
+
+      var html="<table><thead><tr><th>Nome</th><th>WhatsApp</th><th>Total</th><th>Data</th></tr></thead><tbody>";
+
+      for(var i=0;i<respostas.length;i++){
+        var r=respostas[i];
+        html += "<tr>" +
+          "<td>"+escapeHtml(r.nome || "")+"</td>" +
+          "<td>"+escapeHtml(r.whatsapp || "")+"</td>" +
+          "<td>"+(r.total || 0)+"</td>" +
+          "<td>"+escapeHtml(new Date(r.data_evento).toLocaleString("pt-BR"))+"</td>" +
+        "</tr>";
+      }
+
+      html += "</tbody></table>";
+      wrap.innerHTML = html;
+    }
+
+    function exportarCSV(){
+      if(!respostas.length){
+        alert("Não há respostas para exportar.");
+        return;
+      }
+
+      var linhas=["nome;whatsapp;data_evento;total;g1;g2;g3;g4;g5;g6;g7;g8;g9;g10;g11;g12"];
+
+      for(var i=0;i<respostas.length;i++){
+        var r=respostas[i];
+        linhas.push(
+          (r.nome || "") + ";" +
+          (r.whatsapp || "") + ";" +
+          (r.data_evento || "") + ";" +
+          (r.total || 0) + ";" +
+          ((r.respostas || []).join(";"))
+        );
+      }
+
+      var blob=new Blob([linhas.join("\n")], {type:"text/csv;charset=utf-8;"});
+      var link=document.createElement("a");
+      link.href=URL.createObjectURL(blob);
+      link.download="respostas_quiz_online.csv";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    document.getElementById("btnLimpar").onclick = limparResposta;
+    document.getElementById("btnFinalizar").onclick = finalizarSalvar;
+
+    document.getElementById("btnCriador").onclick = function(){
+      document.getElementById("painelCriador").classList.remove("oculto");
+      document.getElementById("btnFecharCriador").classList.remove("oculto");
+    };
+
+    document.getElementById("btnFecharCriador").onclick = function(){
+      document.getElementById("painelCriador").classList.add("oculto");
+      document.getElementById("btnFecharCriador").classList.add("oculto");
+      document.getElementById("painelEdicao").classList.add("oculto");
+    };
+
+    document.getElementById("btnEntrarCriador").onclick = function(){
+      var senha=document.getElementById("senhaCriador").value;
+      if(senha!==senhaPadraoCriador){
+        alert("Senha incorreta.");
+        return;
+      }
+      document.getElementById("painelEdicao").classList.remove("oculto");
+      renderEditorLegenda();
+      carregarRespostasOnline();
+    };
+
+    document.getElementById("btnSalvarLegenda").onclick = function(){
+      var campos=document.querySelectorAll("[data-legenda]");
+      for(var i=0;i<campos.length;i++){
+        var idx=Number(campos[i].getAttribute("data-legenda"));
+        legenda[idx].texto=campos[i].value.trim() || legenda[idx].texto;
+      }
+
+      var centro=document.getElementById("tituloCentro").value.trim();
+      if(centro) document.getElementById("centerText").textContent=centro;
+
+      renderLegenda();
+      alert("Legenda atualizada nesta página.");
+    };
+
+    document.getElementById("btnCarregarOnline").onclick = carregarRespostasOnline;
+    document.getElementById("btnExportar").onclick = exportarCSV;
+
+    desenharRoda();
+    renderLegenda();
+    atualizarResumo();
+    iniciarSupabase();
+  </script>
+</body>
+</html>
