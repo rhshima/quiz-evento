@@ -342,8 +342,10 @@ function iconeFogo(cor){
       atualizarResumo();
     }
 
- function iniciarSupabase(){
+function iniciarSupabase(){
   try{
+    console.log("SUPABASE:", window.supabase);
+
     if(window.supabase && window.supabase.createClient){
       supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
       document.getElementById("statusOnline").textContent = "Modo online ativo.";
