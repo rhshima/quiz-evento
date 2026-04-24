@@ -343,17 +343,17 @@ function iconeFogo(cor){
     }
 
     function iniciarSupabase(){
-      try{
-        if(window.supabase && typeof window.supabase.createClient === "function"){
-          supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-          document.getElementById("statusOnline").textContent = "Modo online ativo.";
-        }else{
-          document.getElementById("statusOnline").textContent = "Modo online indisponível no momento. A roda continua funcionando.";
-        }
-      }catch(e){
-        document.getElementById("statusOnline").textContent = "Falha ao iniciar modo online. A roda continua funcionando.";
-      }
+  try{
+    if(window.supabase){
+      supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      document.getElementById("statusOnline").textContent = "Modo online ativo.";
+    }else{
+      document.getElementById("statusOnline").textContent = "Modo online indisponível no momento. A roda continua funcionando.";
     }
+  }catch(e){
+    document.getElementById("statusOnline").textContent = "Falha ao iniciar modo online. A roda continua funcionando.";
+  }
+}
 
     async function finalizarSalvar(){
       var nome=document.getElementById("nome").value.trim();
