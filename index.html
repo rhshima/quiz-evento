@@ -143,7 +143,7 @@
     var SUPABASE_URL = "https://ukbmrszdjqkgxmtlixlp.supabase.co";
     var SUPABASE_ANON_KEY = "sb_publishable_8-Ou14CQn7kPQlFEo00f8A_ZEVgfDpu";
     var senhaPadraoCriador = "1234";
-    var supabase = null;
+    var supabaseClient = null;
 
     var svgNS = "http://www.w3.org/2000/svg";
     var svg = document.createElementNS(svgNS, "svg");
@@ -344,21 +344,17 @@ function iconeFogo(cor){
 
  function iniciarSupabase(){
   try{
-    if(typeof supabase === "undefined" || !window.supabase){
+    if(window.supabase && window.supabase.createClient){
+      supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      document.getElementById("statusOnline").textContent = "Modo online ativo.";
+    }else{
       document.getElementById("statusOnline").textContent = "Supabase não carregou.";
-      return;
     }
-
-    var cliente = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    supabase = cliente;
-
-    document.getElementById("statusOnline").textContent = "Modo online ativo.";
   }catch(e){
     document.getElementById("statusOnline").textContent = "Erro ao iniciar Supabase.";
     console.error(e);
   }
 }
-
     async function finalizarSalvar(){
       var nome=document.getElementById("nome").value.trim();
       var whatsapp=document.getElementById("whatsapp").value.trim();
@@ -366,7 +362,7 @@ function iconeFogo(cor){
       if(!nome){ alert("Digite o nome."); return; }
       if(!whatsapp){ alert("Digite o WhatsApp com DDD."); return; }
 
-      if(!supabase){
+      if(!supabaseClient){
         alert("A roda está funcionando, mas o modo online não carregou.");
         return;
       }
@@ -380,7 +376,7 @@ function iconeFogo(cor){
         legenda: legenda
       };
 
-      var resp = await supabase.from("respostas_quiz").insert([registro]);
+      var resp = await supabaseClient.from("respostas_quiz").insert([registro]);
 
       if(resp.error){
         alert("Erro ao salvar online: " + resp.error.message);
@@ -394,7 +390,7 @@ function iconeFogo(cor){
     }
 
     async function carregarRespostasOnline(){
-      if(!supabase){
+     if(!supabaseClient){
         document.getElementById("listaRespostas").innerHTML =
           "<p class='pequeno'>Modo online indisponível no momento.</p>";
         return;
