@@ -106,11 +106,39 @@
       <p class="pequeno" id="statusOnline"></p>
     </div>
 
-    <div class="box" id="adminArea">
-     <div class="box" id="adminArea">
-...
-</div>
+   <div class="box" id="adminArea">
+  <h2>Legenda</h2>
+  <p>Os textos abaixo aparecem para todos. No modo criador, você pode editar.</p>
 
+  <div id="legendList"></div>
+
+  <button class="btn-claro" id="btnCriador" type="button">Abrir modo criador</button>
+  <button class="btn-escuro oculto" id="btnFecharCriador" type="button">Fechar modo criador</button>
+
+  <div id="painelCriador" class="oculto">
+    <div style="margin-top:14px;">
+      <label for="senhaCriador">Senha do criador</label>
+      <input id="senhaCriador" type="password" placeholder="Digite a senha">
+    </div>
+
+    <button class="btn-claro" id="btnEntrarCriador" type="button">Entrar</button>
+
+    <div id="painelEdicao" class="oculto">
+      <h3 style="margin-top:18px;">Editar legenda</h3>
+      <div id="legendEditor"></div>
+
+      <label for="tituloCentro">Texto do centro</label>
+      <input id="tituloCentro" type="text" placeholder="Ex.: QUIZ">
+
+      <button class="btn-verde" id="btnSalvarLegenda" type="button">Salvar legenda</button>
+      <button class="btn-escuro" id="btnCarregarOnline" type="button">Atualizar respostas online</button>
+      <button class="btn-vermelho" id="btnExportar" type="button">Exportar CSV</button>
+
+      <h3 style="margin-top:18px;">Respostas online</h3>
+      <div id="listaRespostas"></div>
+    </div>
+  </div>
+</div>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script>
     var SUPABASE_URL = "https://ukbmrszdjqkgxmtlixlp.supabase.co";
