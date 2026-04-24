@@ -84,7 +84,7 @@
   <div class="container">
   <div class="box">
     <h1>Avaliação Fogo Azul</h1>
-    <p>Preencha seu nome e WhatsApp com DDD.</p>
+    <h2 style="color:white;">Cadastro</h2>
 
     <label for="nome">Nome</label>
     <input id="nome" type="text" placeholder="Digite seu nome">
@@ -96,6 +96,7 @@
 
    <div id="adminArea">
    <div id="legendList"></div>
+  <h2 style="color:white; margin-top:1cm;">Círculo Fogo Azul</h2>
    </div>
 
    <div id="adminArea">
@@ -109,7 +110,7 @@
 
    <div style="margin-top:2cm;"></div>
 
-<p style="color:white; text-align:center; font-weight:bold; margin-bottom:10px;">
+<p style="color:white; text-align:left; font-weight:normal; margin-bottom:10px;">
 Responda tocando nos níveis de cada assunto do 1 ao 12, e finalize assim que responder todas.
 </p>
 
@@ -155,6 +156,7 @@ Responda tocando nos níveis de cada assunto do 1 ao 12, e finalize assim que re
   </div>
 
   <div class="box">
+    <h2 style="color:white;">Resultado Fogo Azul</h2>
     <div class="resumo" id="resultadoResumo">
       Nenhuma resposta finalizada ainda.
     </div>
@@ -350,7 +352,6 @@ function iconeFogo(cor){
   }
 
   document.getElementById("resultadoResumo").innerHTML =
-    "<strong>Resultado Fogo Azul:</strong><br>" +
     "Etapas Respondidas: " + respondidos + " de 12<br>" +
     "Soma total: " + total + "<br><br>" +
     estadoAtual.map(function(v, idx){
