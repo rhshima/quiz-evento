@@ -56,8 +56,8 @@
     th,td{border-bottom:1px solid #333;padding:8px 6px;text-align:left;vertical-align:top}
     .mini{display:inline-block;padding:4px 8px;border-radius:999px;background:#313131;color:white;font-size:12px;margin:2px 4px 2px 0}
     .mini svg{
-  width:16px;
-  height:16px;
+  width:22px;
+  height:22px;
   min-height:0;
   max-width:16px;
   display:inline-block;
@@ -322,8 +322,8 @@ function iconeFogo(cor){
     "Etapas Respondidas: " + respondidos + " de 12<br>" +
     "Soma total: " + total + "<br><br>" +
     estadoAtual.map(function(v, idx){
-      return '<span class="mini">' + (idx + 1) + ': ' + fogosResultado(v) + '</span>';
-    }).join(" ");
+     return '<div class="mini"><strong>Etapa ' + (idx + 1) + ':</strong> ' + fogosResultado(v) + '</div>';
+    }).join("<br>");
 }
     function limparResposta(){
       for(var i=0;i<12;i++){
