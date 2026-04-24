@@ -176,8 +176,9 @@
   svg.appendChild(fogoExterno);
 
   for(var g=0; g<12; g++){
+  var a1 = g * 30, a2 = (g + 1) * 30;
 
-        for(var l=0; l<5; l++){
+  for(var l=0; l<5; l++){
           var path=document.createElementNS(svgNS,"path");
           path.setAttribute("d", fatia(raios[l],raios[l+1],a1,a2));
           path.setAttribute("fill","white");
