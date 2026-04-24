@@ -162,7 +162,16 @@
       }
     }
 
-    function desenharRoda(){
+    function desenharRoda()var fogoExterno = document.createElementNS(svgNS,"image");
+
+fogoExterno.setAttribute("href","fogo-azul.png"); 
+fogoExterno.setAttribute("x", cx - 300);
+fogoExterno.setAttribute("y", cy - 300);
+fogoExterno.setAttribute("width", 600);
+fogoExterno.setAttribute("height", 600);
+fogoExterno.setAttribute("opacity", 0.9);
+
+svg.appendChild(fogoExterno);{
       for(var g=0; g<12; g++){
         var a1=g*30, a2=(g+1)*30;
 
