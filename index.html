@@ -396,7 +396,7 @@ function iconeFogo(cor){
         return;
       }
 
-      var resultado = await supabase
+      var resultado = await supabaseClient
         .from("respostas_quiz")
         .select("*")
         .order("id", { ascending:false });
